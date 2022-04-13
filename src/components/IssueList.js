@@ -40,7 +40,6 @@ const IssueList = ({ issues = [], actions }) => {
     };
   return (
       <IssuesContainer onSortEnd={onSortEnd}>
-        <h2>Issues</h2>
         {issues.map((issue, index) => (
             <IssueItem
                 key={issue.id}
