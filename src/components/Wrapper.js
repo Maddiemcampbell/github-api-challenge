@@ -47,10 +47,12 @@ const Wrapper = ({ repos, actions, issues }) => {
           }}/>
         <Button onClick={() => handleSubmit(token)} variant="contained" style={{backgroundColor: "blue", marginLeft: "20px"}} id="btn-submit">Submit</Button>
       </div>
-      <Containers>
-        {repos && (<RepoList handleClick={handleRepoSelection} repos={repos}/>)}
-        {issues && (<IssueList issues={issues}/>)}
-      </Containers>
+      {repos && (
+        <Containers>
+          <RepoList handleClick={handleRepoSelection} repos={repos}/>
+          <IssueList issues={issues}/>
+        </Containers>
+      )}
     </div>
   );
 };
