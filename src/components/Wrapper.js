@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadRepository } from "../redux/actions/reposActions";
-import {
-  loadIssues
-} from "../redux/actions/issuesActions";
+import { loadIssues } from "../redux/actions/issuesActions";
 
 import RepoList from "./RepoList";
 import IssueList from "./IssueList";
+import styled from "styled-components";
+
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+
+const Containers = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+`;
 
 const Wrapper = ({ repos, actions, issues }) => {
     const [token, setToken] = useState("");
@@ -30,18 +38,19 @@ const Wrapper = ({ repos, actions, issues }) => {
 
   return (
     <div>
-      <div style={{padding: '20px'}}>
-        <input placeholder="Github Key" style={{margin:'20px'}}
+      <div style={{padding: '40px'}}>
+        <TextField id="filled-basic" 
+            placeholder="Github Key"
             onChange={e => {
             e.preventDefault();
             setToken(e.target.value);
           }}/>
-        <button onClick={() => handleSubmit(token)}>Submit</button>
+        <Button onClick={() => handleSubmit(token)} variant="contained" style={{backgroundColor: "blue", marginLeft: "20px"}} id="btn-submit">Submit</Button>
       </div>
-      <div>
-        {repos && (<RepoList handleClick={handleRepoSelection} repos={repos} />)}
-        {issues && (<IssueList issues={issues} />)}
-      </div>
+      <Containers>
+        {repos && (<RepoList handleClick={handleRepoSelection} repos={repos}/>)}
+        {issues && (<IssueList issues={issues}/>)}
+      </Containers>
     </div>
   );
 };

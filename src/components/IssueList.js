@@ -1,15 +1,21 @@
 import React from "react";
 import moment from "moment";
 import { sortableContainer, sortableElement } from "react-sortable-hoc";
+
 import styled from "styled-components";
+
+import { reorderIssues } from "../redux/actions/issuesActions";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
 const CardStyling = styled.li`
   list-style-type: none;
   cursor: pointer;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05), 0 0px 40px rgba(0, 0, 0, 0.08);
   border-radius: 5px;
-  width: 30%;
+  width: 100%;
   margin: 20px 0px 20px 0px;
+  padding: 10px;
 `;
 
 const IssueItem = sortableElement(({ title, img, created, updated }) => {
@@ -21,15 +27,19 @@ const IssueItem = sortableElement(({ title, img, created, updated }) => {
         <div> Updated : {" " + moment(updated).fromNow("DD") + " ago"}</div>
       </CardStyling>
     );
-  });
+});
 
-const Container = sortableContainer(({ children }) => {
+const IssuesContainer = sortableContainer(({ children }) => {
     return <ul className="column">{children}</ul>;
 });
 
-const IssueList = ({ issues = []}) => {
+const IssueList = ({ issues = [], actions }) => {
+    console.log("issues", issues)
+    const onSortEnd = ({ oldIndex, newIndex }) => {
+        actions.reorderIssues(oldIndex, newIndex, issues);
+    };
   return (
-      <Container>
+      <IssuesContainer onSortEnd={onSortEnd}>
         <h2>Issues</h2>
         {issues.map((issue, index) => (
             <IssueItem
@@ -37,12 +47,23 @@ const IssueList = ({ issues = []}) => {
                 index={index}
                 title={issue.title}
                 created={issue.created_at}
-                updated={issue.updated_at}
                 img={issue.user.avatar_url}
           />
         ))}
-      </Container>
+      </IssuesContainer>
   );
 };
 
-export default (IssueList);
+function mapStateToProps({ repos, issues }) {
+    return { repos, issues };
+  }
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      actions: {
+        reorderIssues: bindActionCreators(reorderIssues, dispatch)
+      }
+    };
+  }
+  
+export default connect(mapStateToProps, mapDispatchToProps)(IssueList);
