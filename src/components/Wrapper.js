@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadRepository } from "../redux/actions/reposActions";
 import {
-  loadIssues,
-  reorderIssuesSuccess
+  loadIssues
 } from "../redux/actions/issuesActions";
 
 import RepoList from "./RepoList";
@@ -31,8 +30,8 @@ const Wrapper = ({ repos, actions, issues }) => {
 
   return (
     <div>
-      <div>
-        <input placeholder="Github Key" 
+      <div style={{padding: '20px'}}>
+        <input placeholder="Github Key" style={{margin:'20px'}}
             onChange={e => {
             e.preventDefault();
             setToken(e.target.value);
@@ -40,8 +39,8 @@ const Wrapper = ({ repos, actions, issues }) => {
         <button onClick={() => handleSubmit(token)}>Submit</button>
       </div>
       <div>
-        <RepoList handleClick={handleRepoSelection} repos={repos} />
-        <IssueList issues={issues} />
+        {repos && (<RepoList handleClick={handleRepoSelection} repos={repos} />)}
+        {issues && (<IssueList issues={issues} />)}
       </div>
     </div>
   );
@@ -56,7 +55,6 @@ function mapStateToProps({ repos, issues }) {
       actions: {
         loadRepository: bindActionCreators(loadRepository, dispatch),
         loadIssues: bindActionCreators(loadIssues, dispatch),
-        reorderIssuesSuccess: bindActionCreators(reorderIssuesSuccess, dispatch)
       }
     };
   }
